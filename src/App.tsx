@@ -1,5 +1,5 @@
+import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useState } from "react";
-import QRCode from "react-qr-code";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ function App() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
         ) : qrCode && generate ? (
-          <QRCode
+          <QRCodeCanvas
             bgColor="transparent"
             value={qrCode}
             size={186}
