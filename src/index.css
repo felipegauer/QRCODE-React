@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "SF Pro";
+  src: url("./assets/Fonts/SF-Pro-Rounded-Regular.otf") format("opentype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("./assets/Fonts/SF-Pro-Rounded-Semibold.otf") format("opentype");
+  font-weight: 600;
+}
+
+:root,
+body {
+  font-family: "SF Pro", sans-serif;
+  background-color: white;
+  background-image: url("./assets/Images/abstract-bg.jpg");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  body {
+    background-color: black;
+    background-image: url("./assets/Images/abstract-bg.jpg");
+  }
+}
