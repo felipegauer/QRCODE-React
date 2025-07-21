@@ -1,14 +1,22 @@
 import { QRCodeCanvas } from "qrcode.react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [qrCode, setQrCode] = useState("");
   const [generate, setGenerate] = useState(false);
+  const [imgSrc, setImgSrc] = useState("");
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("QR Code:", qrCode);
-  }, [qrCode]);
+    if (generate && canvasRef.current) {
+      const canvas = canvasRef.current.querySelector("canvas");
+      if (canvas) {
+        const dataUrl = canvas.toDataURL("image/png");
+        setImgSrc(dataUrl);
+      }
+    }
+  }, [generate]);
 
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-[url('./assets/Images/abstract-bg.jpg')] bg-center bg-cover bg-no-repeat text-white">
@@ -25,11 +33,10 @@ function App() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
         ) : qrCode && generate ? (
-          <QRCodeCanvas
-            bgColor="transparent"
-            value={qrCode}
-            size={186}
-            className="w-[186px] h-[186px]"
+          <img
+            src={imgSrc}
+            alt="QR Code"
+            className="w-[186px] h-[186px] rounded shadow-lg"
           />
         ) : (
           <input
@@ -42,33 +49,58 @@ function App() {
           />
         )}
 
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (generate) {
-              setGenerate(false);
-              setQrCode("");
-              setLoading(false);
-              return;
-            }
-            setLoading(true);
-            setTimeout(() => {
-              if (!qrCode) setLoading(false);
-              if (qrCode.trim() === "") {
+        {/* QRCodeCanvas escondido apenas para gerar o canvas */}
+        <div className="hidden" ref={canvasRef}>
+          {generate && <QRCodeCanvas value={qrCode} size={186} />}
+        </div>
+
+        {qrCode && generate ? (
+          <div className="flex gap-4 w-full">
+            <a
+              href={imgSrc}
+              download={`${qrCode.replace(/\s+/g, "_")}.png`}
+              target="_blank"
+              className="px-4 py-2 text-sm bg-blue-600 text-white cursor-pointer text-center rounded-full w-full transition-all duration-300 hover:bg-blue-700"
+            >
+              Download
+            </a>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setGenerate(false);
                 setQrCode("");
-              } else {
-                if (qrCode) {
-                  setGenerate(true);
+                setLoading(false);
+                setImgSrc("");
+              }}
+              className="px-4 py-2 text-sm bg-red-600 text-white cursor-pointer rounded-full w-full transition-all duration-300 hover:bg-red-700"
+            >
+              Clear
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+
+              setLoading(true);
+              setTimeout(() => {
+                if (!qrCode) setLoading(false);
+                if (qrCode.trim() === "") {
+                  setQrCode("");
+                } else {
+                  if (qrCode) {
+                    setGenerate(true);
+                  }
                 }
-              }
-              setLoading(false);
-            }, Math.random() * 1000);
-          }}
-          type="submit"
-          className="px-4 py-2 text-sm bg-blue-600 text-white cursor-pointer rounded-full w-full transition-all duration-300 hover:bg-blue-700"
-        >
-          {qrCode && generate ? "Clear" : "Generate"}
-        </button>
+                setLoading(false);
+              }, Math.random() * 1000);
+            }}
+            type="submit"
+            className="px-4 py-2 text-sm bg-blue-600 text-white cursor-pointer rounded-full w-full transition-all duration-300 hover:bg-blue-700"
+          >
+            {qrCode && generate ? "Clear" : "Generate"}
+          </button>
+        )}
       </form>
     </div>
   );
