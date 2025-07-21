@@ -38,7 +38,7 @@ function App() {
             onChange={(e) => {
               setQrCode(e.target.value);
             }}
-            className="px-4 py-2 w-86 text-sm border border-white/40 bg-white/30 placeholder-white/70 text-white rounded-lg md:w-full focus:outline-none focus:ring-2 focus:ring-white/30"
+            className="px-4 py-2 w-76 md:w-86 text-sm border border-white/40 bg-white/30 placeholder-white/70 text-white rounded-lg lg:w-full focus:outline-none focus:ring-2 focus:ring-white/30"
           />
         )}
 
